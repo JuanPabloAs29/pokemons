@@ -1,0 +1,68 @@
+@import '../foundations/transversal-variables.scss';
+
+@mixin subtitles {
+    font-family: $custom-font-family;
+    font-weight: 100;
+    font-size: 20px;
+}
+
+@mixin labels {
+    font-family: $custom-font-family;
+    font-size: 17px;
+}
+
+@mixin buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 45px;
+    padding: 20px;
+    background-color: $primary-color;
+    color: $base-white;
+    border-radius: $border-radius-buttons;
+    border: 0;
+    cursor: pointer;
+
+    &:active {
+        opacity: 0.8;
+    }
+
+    &:hover {
+        transform: scale(1.02);
+    }
+
+    &:disabled {
+        opacity: 0.2;
+        pointer-events: none;
+    }
+
+    > i {
+        font-size: $custom-font-size;
+        font-weight: 800;
+        margin-right: 10px;
+    }
+
+    > span {
+        font-family: $custom-font-family;
+        font-size: $custom-font-size;
+        font-weight: 100;
+    }
+}
+
+@mixin input-box {
+    border: $border-elements;
+    border-radius: $border-radius-buttons;
+    background-color: $base-white;
+    width: 200px;
+    height: 20px;
+    padding: 10px;
+
+    &::placeholder {
+        opacity: 0.5;
+    }
+
+    &.invalid {
+        border-color: $invalid-color;
+    }
+}

@@ -1,0 +1,179 @@
+@use '../../styles/mixins/transversal-styles.scss' as *;
+@import '../../styles/foundations/transversal-variables.scss';
+
+.info-container {
+    background-color: $background-page;
+    padding: 30px;
+    height: 100vh;
+
+    > h2 {
+        @include subtitles;
+    }
+
+    .cointainer-search-new {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .search {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            @include input-box;
+            margin: 10px 0 20px 0;
+
+            .fa-solid.fa-magnifying-glass {
+                color: $icon-search-color;
+                margin-right: 7px;
+            }
+
+            > input {
+                border: 0;
+                height: 100%;
+                width: 100%;
+                font-family: $custom-font-family;
+                font-size: $custom-font-size;
+
+                &:focus {
+                    outline: none;
+                }
+                
+                &::placeholder {
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        > button {
+            @include buttons;
+        }
+    }
+
+    .container-result {
+        width: 100%;
+        height: auto;
+
+        > table {
+            width: 100%;
+            height: inherit;
+            margin-top: 10px;
+            padding: 0;
+            border: $border-elements;
+            border-collapse: collapse;
+            background-color: $base-white;
+
+            th, td {
+                font-family: $custom-font-family;
+                font-size: $custom-font-size;
+                border: $border-elements;
+                padding: 8px;
+
+                .image-table {
+                    width: 50px;
+                    display: block;
+                    margin: 0 auto;
+                }
+
+                .buttons-conatiner {
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+                    width: 100%;
+
+                    > button {
+                        color: $primary-color;
+                        background-color: $base-white;
+                        border: 0;
+                        font-weight: 400;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+
+    .container-add {
+        border: $border-elements;
+        background-color: $base-white;
+        margin-top: 20px;
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        > h2 {
+            @include subtitles;
+            margin-bottom: 20px;
+        }
+
+        .pokemon-info-container {
+            display: grid;
+            grid-template-columns: 2fr 2fr;
+            grid-template-rows: 1fr 1fr;
+            grid-gap: 40px;
+            margin-top: 10px;
+    
+            :nth-child(1) {
+                grid-column: 1;
+                grid-row: 1;
+
+                > label {
+                    @include labels;
+                }
+                > input {
+                    @include input-box;
+                }
+            }
+            :nth-child(2) {
+                grid-column: 1;
+                grid-row: 2;
+
+                > label {
+                    @include labels;
+                    margin-right: $margin-label;
+                };
+                > input {
+                    @include input-box;
+                }
+            }
+            :nth-child(3) {
+                grid-column: 2;
+                grid-row: 1;
+                display: flex;
+                align-items: center;
+                > label {
+                    @include labels;
+                    margin-right: $margin-label;
+                };
+                > span {
+                    margin: $margin-span;
+                }
+            }
+            :nth-child(4) {
+                grid-column: 2;
+                grid-row: 2;
+                display: flex;
+                align-items: center;
+                > label {
+                    @include labels;
+                }
+                > span {
+                    margin: $margin-span;
+                }
+            }
+        }
+
+        .buttons-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+           > button {
+                @include buttons;
+                width: 130px;
+                height: 40px;
+                margin-right: 10px;
+            }
+        }
+    }
+}
