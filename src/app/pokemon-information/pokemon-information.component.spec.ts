@@ -34,8 +34,8 @@ describe('PokemonInformationComponent', () => {
 
   it('deberia obtener todos los pokemon', () => {
     const response = [
-      {nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+      {name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ]
     const spyGetPokemons = jest.spyOn(pokemonsService, 'getAllPokemons').mockReturnValue(of(response));
     component.getPokemons();
@@ -43,33 +43,63 @@ describe('PokemonInformationComponent', () => {
   })
 
   it('deberia actualizar un pokemon', () => {
-    component.pokemonId = '0'
-    const response = [
-      {id: '0', nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {id: '1', nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+    component.pokemonId = 1
+    component.pokemonsFound = [
+      {id: 1, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {id: 2, name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ]
+    const response = {id: 1, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40}
+    const spyUpdatePokemon = jest.spyOn(pokemonsService, 'updatePokemon').mockReturnValue(of(response));
+    component.createUpdatePokemon();
+    expect(spyUpdatePokemon).toHaveBeenCalled();
+  })
+
+  it('np deberia encontrar el id para actualizar el pokemon', () => {
+    component.pokemonId = 3
+    component.pokemonsFound = [
+      {id: 1, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {id: 2, name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
+    ]
+    const response = {id: 1, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40}
     const spyUpdatePokemon = jest.spyOn(pokemonsService, 'updatePokemon').mockReturnValue(of(response));
     component.createUpdatePokemon();
     expect(spyUpdatePokemon).toHaveBeenCalled();
   })
 
   it('deberia crear un pokemon', () => {
-    const response = [
-      {nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
-    ]
+    const response = {name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40};
     const spyCreatePokemon = jest.spyOn(pokemonsService, 'createPokemon').mockReturnValue(of(response));
+    const spyClearField = jest.spyOn(component, 'clearFields').mockImplementation();
     component.createUpdatePokemon();
     expect(spyCreatePokemon).toHaveBeenCalled();
+    expect(spyClearField).toHaveBeenCalled();
+  })
+
+  it('deberia crear la estructura del request', () => {
+    component.nombre?.setValue('Pikachu');
+    component.imagen?.setValue('www.google.com');
+    component.ataque?.setValue(30);
+    component.defensa?.setValue(70);
+    const req = {
+      name: 'Pikachu',
+      image: 'www.google.com',
+      attack: 30,
+      defense: 70,
+      hp: 55,
+      type: "Electrico",
+      idAuthor: 1
+    }
+    const spyCreateReq = component.createRequest();
+    expect(spyCreateReq).toEqual(req);
   })
 
   it('deberia eliminar un pokemon', () => {
-    const response = [
-      {id: '0', nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {id: '1', nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+    component.pokemonsFound = [
+      {id: 1, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {id: 2, name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ]
-    const spyGetPokemons = jest.spyOn(pokemonsService, 'deletePokemon').mockReturnValue(of(response));
-    component.deletePokemon('0');
+    const spyGetPokemons = jest.spyOn(pokemonsService, 'deletePokemon').mockReturnValue(of({}));
+    component.deletePokemon(1);
     expect(spyGetPokemons).toHaveBeenCalled();
   })
 
@@ -87,35 +117,35 @@ describe('PokemonInformationComponent', () => {
     expect(component.disabledSubmit).toBeTruthy();
   })
 
-  it('deberia validar el input del nombre y retornar un valido', () => {
+  it('deberia validar el input del name y retornar un valido', () => {
     component.nombre?.setValue('Pikachu');
     const spyValidate = component.validateNameInput();
     expect(spyValidate).toBeFalsy();
   })
 
-  it('deberia validar el input del nombre y retornar un invalido', () => {
+  it('deberia validar el input del name y retornar un invalido', () => {
     component.nombre?.markAsTouched();
     const spyValidate = component.validateNameInput();
     expect(spyValidate).toBeTruthy();
   })
 
-  it('deberia validar el input de la imagen y retornar un valido', () => {
+  it('deberia validar el input de la image y retornar un valido', () => {
     component.imagen?.setValue('Pikachu');
     const spyValidate = component.validateImageInput();
     expect(spyValidate).toBeFalsy();
   })
 
-  it('deberia validar el input de la imagen y retornar un invalido', () => {
+  it('deberia validar el input de la image y retornar un invalido', () => {
     component.imagen?.markAsTouched();
     const spyValidate = component.validateImageInput();
     expect(spyValidate).toBeTruthy();
   })
 
   it('deberia realizar el filtro de busqueda y encontrar resultados', () => {
-    const res = {nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40};
+    const res = {name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40};
     component.pokemons = [
-      {nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+      {name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ];
     component.inputSearch = 'Pikachu';
     component.searchPokemon();
@@ -124,8 +154,8 @@ describe('PokemonInformationComponent', () => {
 
   it('deberia realizar el filtro de busqueda y no encontrar resultados', () => {
     component.pokemons = [
-      {nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+      {name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ];
     component.inputSearch = 'Charizard';
     component.searchPokemon();
@@ -135,10 +165,10 @@ describe('PokemonInformationComponent', () => {
   it('deberia obtener los datos para actualizar el pokemon', () => {
     const spyClearFileds = jest.spyOn(component, 'clearFields').mockImplementation();
     component.pokemonsFound = [
-      {id: '0', nombre: 'Pikachu', imagen: 'www.google.com', ataque: 30, defensa: 40},
-      {id: '1', nombre: 'Bulbasur', imagen: 'www.google.com', ataque: 30, defensa: 40}
+      {id: 0, name: 'Pikachu', image: 'www.google.com', attack: 30, defense: 40},
+      {id: 1, name: 'Bulbasur', image: 'www.google.com', attack: 30, defense: 40}
     ];
-    component.addUpdatePokemon('1')
+    component.showAddUpdatePokemon(1)
     expect(component.nombre?.value).toEqual('Bulbasur');
     expect(component.imagen?.value).toEqual('www.google.com');
     expect(component.ataque?.value).toEqual(30);
@@ -148,7 +178,7 @@ describe('PokemonInformationComponent', () => {
 
   it('deberia llamar al metodo para limpiar todos los campos del formulario', () => {
     const spyClearFileds = jest.spyOn(component, 'clearFields').mockImplementation();
-    component.addUpdatePokemon();
+    component.showAddUpdatePokemon();
     expect(spyClearFileds).toHaveBeenCalled();
   })
 

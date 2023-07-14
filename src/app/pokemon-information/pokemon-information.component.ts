@@ -12,24 +12,20 @@ import { crearPokemon } from '../../models/crear-pokemon.model';
 export class PokemonInformationComponent implements OnInit {
 
   formularioPokemon: FormGroup;
-  pokemonsFound: obtenerPokemons[] = [
-    {id: '0', nombre: 'Ivysaur', imagen: 'https://assets.pokemon.com/assets/cms2/img/pokedex/full/002.png', ataque: 65, defensa: 38 },
-    {id: '1', nombre: 'Pikachu', imagen: 'https://static.wikia.nocookie.net/vsbattles/images/0/04/025Pikachu_XY_anime_4.png', ataque: 80, defensa: 20 },
-    {id: '2', nombre: 'Charizard', imagen: 'https://images.wikidexcdn.net/mwuploads/wikidex/thumb/9/95/latest/20160817212623/Charizard.png/1200px-Charizard.png', ataque: 10, defensa: 90 }
-  ];
+  pokemonsFound!: obtenerPokemons[];
   pokemons: obtenerPokemons[];
   disabledSubmit: boolean;
   inputSearch: string;
   createUpdate: boolean;
   pokemonToUpdate: crearPokemon | undefined;
-  pokemonId: string | undefined;
+  pokemonId: number | undefined;
 
   constructor(
     private fb: FormBuilder,
     private pokemonservice: PokemonsService
     ) {
     this.formularioPokemon = this.registroFormularioPokemon();
-    this.pokemons = this.pokemonsFound;
+    this.pokemons = [];
     this.disabledSubmit = true;
     this.inputSearch = '';
     this.createUpdate = false;
@@ -55,6 +51,7 @@ export class PokemonInformationComponent implements OnInit {
   getPokemons(): void {
     this.pokemonservice.getAllPokemons().subscribe(allPokemons => {
       this.pokemonsFound = allPokemons;
+      this.pokemons = allPokemons;
     })
   }
 
@@ -63,49 +60,53 @@ export class PokemonInformationComponent implements OnInit {
    */
   createUpdatePokemon(): void {
     if(this.pokemonId) {
-      const updatePokemon: crearPokemon = {
-        id: this.pokemonId,
-        nombre: this.nombre?.value,
-        imagen: this.imagen?.value,
-        ataque: this.ataque?.value,
-        defensa: this.defensa?.value
-      }
-      const indexPokemon = this.pokemonsFound.findIndex(i => i.id == this.pokemonId);
-      if(indexPokemon !== -1) this.pokemonsFound[Number(this.pokemonId)] = updatePokemon;
-      this.pokemonservice.updatePokemon(updatePokemon, this.pokemonId).subscribe(updatedPokemons => {
-        // this.pokemonsFound = updatedPokemons;
+      const modifyPokemon = this.createRequest()
+      this.pokemonservice.updatePokemon(modifyPokemon, this.pokemonId).subscribe(updatedPokemons => {
+        const indexPokemon = this.pokemonsFound.findIndex(index => index.id == this.pokemonId);
+        if(indexPokemon !== -1) this.pokemonsFound[Number(indexPokemon)] = updatedPokemons;
+        this.clearFields();
       })
     }
     else {
-      const newPokemon: crearPokemon = {
-        nombre: this.nombre?.value,
-        imagen: this.imagen?.value,
-        ataque: this.ataque?.value,
-        defensa: this.defensa?.value
-      }
-      this.pokemonsFound.push(newPokemon);
-      console.log('pasa por aca: ', this.pokemonsFound);
+      const newPokemon = this.createRequest();
       this.pokemonservice.createPokemon(newPokemon).subscribe(createdPokemons => {
-        // this.pokemonsFound = createdPokemons;
+        this.clearFields();
+        this.pokemonsFound.push(createdPokemons);
       })
     }
-    this.clearFields();
+    this.pokemons = this.pokemonsFound;
     this.nombre?.markAsUntouched();
     this.imagen?.markAsUntouched();
+  }
+
+  /**
+   * Metodo que retorna la estructura para crear o actualizar un pokemon
+   * @returns crea y retorna la estructura del request de acuerdo a los datos ingresados en el formulario
+   */
+  createRequest(): crearPokemon {
+    return {
+      name: this.nombre?.value,
+      image: this.imagen?.value,
+      attack: this.ataque?.value,
+      defense: this.defensa?.value,
+      hp: 55,
+      type: "Electrico",
+      idAuthor: 1
+    }
   }
 
   /**
    * Metodo que llama al servicio para eliminar un pokemon
    * @param id identificador del pokemon que se va a eliminar
    */
-  deletePokemon(id?: string): void {
+  deletePokemon(id?: number): void {
     if(id) {
-      const pokemonIndex = this.pokemonsFound.findIndex(i => i.id === id);
-      this.pokemonsFound.splice(pokemonIndex, 1)
-      this.pokemonservice.deletePokemon(id).subscribe(deletedPokemon => {
-      // this.pokemonsFound = deletedPokemon;
+      this.pokemonservice.deletePokemon(id).subscribe(() => {
+        const pokemonIndex = this.pokemonsFound.findIndex(i => i.id === id);
+        this.pokemonsFound.splice(pokemonIndex, 1)
     })
   }
+  this.pokemons = this.pokemonsFound;
   }
 
   /**
@@ -136,7 +137,7 @@ export class PokemonInformationComponent implements OnInit {
    */
   searchPokemon(): void {
     this.pokemonsFound = this.pokemons.filter(item =>
-      item.nombre.toLowerCase().includes(this.inputSearch.toLowerCase())
+      item.name?.toLowerCase().includes(this.inputSearch.toLowerCase())
     );
   }
 
@@ -144,15 +145,15 @@ export class PokemonInformationComponent implements OnInit {
    * metodo que muestra la seccion para crear o actualizar un pokemon
    * @param id identificador del pokemon que se desea actualizar
    */
-  addUpdatePokemon(id?: string): void {
+  showAddUpdatePokemon(id?: number): void {
     this.createUpdate = true;
     if(id) {
       this.pokemonId = id;
       this.pokemonToUpdate = this.pokemonsFound.find(objeto => objeto.id === id);
-      this.nombre?.setValue(this.pokemonToUpdate?.nombre);
-      this.imagen?.setValue(this.pokemonToUpdate?.imagen);
-      this.ataque?.setValue(this.pokemonToUpdate?.ataque);
-      this.defensa?.setValue(this.pokemonToUpdate?.defensa);
+      this.nombre?.setValue(this.pokemonToUpdate?.name);
+      this.imagen?.setValue(this.pokemonToUpdate?.image);
+      this.ataque?.setValue(this.pokemonToUpdate?.attack);
+      this.defensa?.setValue(this.pokemonToUpdate?.defense);
       this.validateEnableButton();
     }
     else {

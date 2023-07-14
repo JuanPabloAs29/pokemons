@@ -5,7 +5,7 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" placeholder="Buscar" [(ngModel)]="inputSearch" (ngModelChange)="searchPokemon()">
         </div>
-        <button (click)="addUpdatePokemon()">
+        <button (click)="showAddUpdatePokemon()">
             <i class="fa-solid fa-plus"></i>
             <span>Nuevo</span>
         </button>
@@ -23,19 +23,23 @@
             </thead>
             <tbody>
               <tr *ngFor="let pokemon of pokemonsFound">
-                <td>{{ pokemon.nombre }}</td>
-                <td><img [src]="pokemon.imagen" alt="" class="image-table"></td>
-                <td>{{ pokemon.ataque }}</td>
-                <td>{{ pokemon.defensa }}</td>
+                <td>{{ pokemon.name }}</td>
+                <td><img [src]="pokemon.image" alt="" class="image-table"></td>
+                <td>{{ pokemon.attack }}</td>
+                <td>{{ pokemon.defense }}</td>
                 <td>
                     <div class="buttons-conatiner">
-                        <button (click)="addUpdatePokemon(pokemon.id)"><i class="fa-solid fa-pen"></i></button>
+                        <button (click)="showAddUpdatePokemon(pokemon.id)"><i class="fa-solid fa-pen"></i></button>
                         <button (click)="deletePokemon(pokemon.id)"><i class="fa-solid fa-trash"></i></button>
                     </div>
                 </td>
               </tr>
             </tbody>
           </table>
+    </div>
+    <div *ngIf="pokemonsFound && pokemonsFound.length < 1" class="pokemonNotFound">
+        <img src="../../assets/pokemonNotFound.png" alt="Pokemon no encontrado">
+        <h2>Pokemon No Encontrado</h2>
     </div>
     <div class="container-add" *ngIf="createUpdate">
         <h2>Nuevo Pokemon</h2>

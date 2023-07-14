@@ -11,14 +11,12 @@
     }
 
     .cointainer-search-new {
-        display: flex;
+        @include flex-transversal;
         justify-content: space-between;
-        align-items: center;
 
         .search {
-            display: flex;
+            @include flex-transversal;
             justify-content: flex-start;
-            align-items: center;
             @include input-box;
             margin: 10px 0 20px 0;
 
@@ -75,9 +73,8 @@
                 }
 
                 .buttons-conatiner {
-                    display: flex;
+                    @include flex-transversal;
                     justify-content: space-around;
-                    align-items: center;
                     width: 100%;
 
                     > button {
@@ -92,13 +89,24 @@
         }
     }
 
+    .pokemonNotFound {
+        margin: 50px 0;
+        @include flex-transversal;
+        flex-direction: column;
+        justify-content: center;
+
+        > img {
+            width: 300px;
+            margin-bottom: 10px;
+        }
+    }
+
     .container-add {
         border: $border-elements;
         background-color: $base-white;
         margin-top: 20px;
         padding: 20px;
-        display: flex;
-        align-items: center;
+        @include flex-transversal;
         flex-direction: column;
 
         > h2 {
@@ -139,8 +147,7 @@
             :nth-child(3) {
                 grid-column: 2;
                 grid-row: 1;
-                display: flex;
-                align-items: center;
+                @include flex-transversal;
                 > label {
                     @include labels;
                     margin-right: $margin-label;
@@ -152,8 +159,8 @@
             :nth-child(4) {
                 grid-column: 2;
                 grid-row: 2;
-                display: flex;
-                align-items: center;
+                @include flex-transversal;
+
                 > label {
                     @include labels;
                 }
@@ -164,9 +171,8 @@
         }
 
         .buttons-form {
-            display: flex;
+            @include flex-transversal;
             justify-content: center;
-            align-items: center;
             margin-top: 30px;
            > button {
                 @include buttons;

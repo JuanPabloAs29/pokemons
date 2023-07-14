@@ -1,5 +1,11 @@
-import { crearPokemon } from './crear-pokemon.model';
 
-export interface obtenerPokemons extends crearPokemon {
-    id?: string;
+export interface obtenerPokemons {
+    id?: number;
+    name?: string;
+    image?: string; 
+    attack?: number;
+    defense?: number;
+    hp?: number;
+    type?: string;
+    id_author?: number;
 }

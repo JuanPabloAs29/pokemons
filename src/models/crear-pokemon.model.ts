@@ -1,7 +1,9 @@
 export interface crearPokemon {
-    id?: string;
-    nombre: string;
-    imagen: string;
-    ataque: number;
-    defensa: number;
+    name?: string;
+    image?: string; 
+    attack?: number;
+    defense?: number;
+    hp?: number;
+    type?: string;
+    idAuthor?: number;
 }

@@ -17,7 +17,7 @@ export class PokemonsService {
    * @returns retorna un observable con el arreglo de los pokemons
    */
   getAllPokemons(): Observable<obtenerPokemons[]> {
-    return this.http.get<obtenerPokemons[]>(environment.urlApiPokemon);
+    return this.http.get<obtenerPokemons[]>(`${environment.urlApiPokemon}/?idAuthor=1`);
   }
 
   /**
@@ -25,8 +25,8 @@ export class PokemonsService {
    * @param newPokemon request con los datos para crear el nuevo pokemon
    * @returns retorna un observable con el nuevo arreglo de pokemon
    */
-  createPokemon(newPokemon: crearPokemon): Observable<obtenerPokemons[]> {
-    return this.http.post<obtenerPokemons[]>(environment.urlApiPokemon, newPokemon);
+  createPokemon(newPokemon: crearPokemon): Observable<obtenerPokemons> {
+    return this.http.post<obtenerPokemons>(environment.urlApiPokemon, newPokemon);
   }
 
   /**
@@ -35,8 +35,8 @@ export class PokemonsService {
    * @param id identificador del pokemon que se va a actualziar
    * @returns retorna un observable con el nuevo arreglo de pokemons
    */
-  updatePokemon(pokemon: crearPokemon, id: string): Observable<obtenerPokemons[]> {
-    return this.http.put<obtenerPokemons[]>(`${environment.urlApiPokemon}:${id}`, pokemon);
+  updatePokemon(pokemon: crearPokemon, id: number): Observable<obtenerPokemons> {
+    return this.http.put<obtenerPokemons>(`${environment.urlApiPokemon}/${id}`, pokemon);
   }
 
   /**
@@ -44,7 +44,7 @@ export class PokemonsService {
    * @param id identificador del pokemos que se va a eliminar
    * @returns retorna un observable con el nuevo arreglo de pokemons
    */
-  deletePokemon(id: string): Observable<obtenerPokemons[]> {
-    return this.http.delete<obtenerPokemons[]>(`${environment.urlApiPokemon}:${id}`);
+  deletePokemon(id: number): Observable<{}> {
+    return this.http.delete<{}>(`${environment.urlApiPokemon}/${id}`);
   }
 }
